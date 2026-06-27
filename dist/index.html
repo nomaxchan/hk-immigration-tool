@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>香港移民计划匹配工具</title>
+<meta name="description" content="回答几个简单问题，获取专属香港移民方案推荐。覆盖投资移民、高才通、优才、专才、留学进修六大计划。">
+<meta property="og:title" content="香港移民计划匹配工具">
+<meta property="og:description" content="回答几个简单问题，获取专属香港移民方案推荐。覆盖投资移民、高才通、优才、专才、留学进修六大计划。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="香港移民计划匹配工具">
+<meta name="twitter:card" content="summary">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;-webkit-tap-highlight-color:transparent}
+.container{width:100%;max-width:720px}
+.card{background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.15);overflow:hidden}
+.card-header{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);color:#fff;padding:28px 24px;text-align:center}
+.card-header h1{font-size:22px;margin-bottom:6px}
+.card-header .subtitle{font-size:13px;opacity:0.8}
+.card-header .flag{font-size:36px;margin-bottom:6px}
+.card-body{padding:24px 20px}
+@media(min-width:600px){.card-body{padding:32px}}
+.progress-bar{display:flex;gap:4px;margin-bottom:20px}
+.progress-bar .step{flex:1;height:4px;background:#e0e0e0;border-radius:2px;transition:background 0.3s}
+.progress-bar .step.active{background:#667eea}
+.progress-bar .step.done{background:#4caf50}
+.form-step{display:none}
+.form-step.active{display:block}
+.form-group{margin-bottom:18px}
+.form-group label{display:block;font-size:14px;font-weight:600;color:#333;margin-bottom:6px}
+.form-group .hint{font-size:12px;color:#999;margin-bottom:4px}
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select{width:100%;padding:11px 14px;border:1.5px solid #e0e0e0;border-radius:8px;font-size:15px;transition:border 0.3s;background:#fff;-webkit-appearance:none;appearance:none}
+.form-group select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:#667eea;box-shadow:0 0 0 3px rgba(102,126,234,0.1)}
+.form-group input.error,.form-group select.error{border-color:#e74c3c}
+.form-group .error-msg{color:#e74c3c;font-size:12px;margin-top:4px;display:none}
+.checkbox-group{display:flex;flex-wrap:wrap;gap:10px}
+.checkbox-group .chip{display:flex;align-items:center;gap:6px;padding:9px 16px;border:1.5px solid #e0e0e0;border-radius:20px;cursor:pointer;font-size:14px;transition:all 0.2s;user-select:none;-webkit-tap-highlight-color:transparent}
+.checkbox-group .chip:hover{border-color:#667eea}
+.checkbox-group .chip.selected{background:#667eea;color:#fff;border-color:#667eea}
+.chip-select-group{display:flex;flex-wrap:wrap;gap:10px}
+.chip-select-group .chip{display:flex;align-items:center;gap:6px;padding:9px 16px;border:1.5px solid #e0e0e0;border-radius:20px;cursor:pointer;font-size:14px;transition:all 0.2s;user-select:none;-webkit-tap-highlight-color:transparent}
+.chip-select-group .chip:hover{border-color:#667eea}
+.chip-select-group .chip.selected{background:#667eea;color:#fff;border-color:#667eea}
+.chip-select-group .chip input{display:none}
+.btn-row{display:flex;gap:12px;margin-top:24px;justify-content:space-between}
+.btn{padding:11px 28px;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;transition:all 0.2s;-webkit-tap-highlight-color:transparent}
+.btn-primary{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
+.btn-primary:hover,.btn-primary:active{transform:translateY(-1px);box-shadow:0 4px 12px rgba(102,126,234,0.4)}
+.btn-secondary{background:#f0f0f0;color:#666}
+.btn-secondary:hover,.btn-secondary:active{background:#e0e0e0}
+.btn:disabled{opacity:0.5;cursor:not-allowed;transform:none!important}
+.btn-restart{display:block;width:100%;margin-top:24px;padding:14px;background:#fff;color:#667eea;border:2px solid #667eea;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;transition:all 0.2s}
+.btn-restart:hover,.btn-restart:active{background:#667eea;color:#fff}
+/* Results page */
+.result-page{display:none}
+.result-page.active{display:block}
+.result-page h2{font-size:20px;color:#1a1a2e;margin-bottom:10px;text-align:center}
+.result-page .thank{text-align:center;color:#666;margin-bottom:20px;font-size:14px}
+.result-page .plan-card{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;padding:20px;border-radius:12px;margin-bottom:16px;text-align:center}
+.result-page .plan-card .plan-name{font-size:22px;font-weight:700;margin:8px 0}
+.result-page .plan-card .reason{font-size:13px;opacity:0.95;line-height:1.6}
+.result-page .plan-card .tag{display:inline-block;background:rgba(255,255,255,0.25);padding:2px 10px;border-radius:10px;font-size:11px;margin-bottom:6px}
+.result-page .next-steps{background:#f8f9ff;padding:20px;border-radius:12px;border-left:4px solid #667eea}
+.result-page .next-steps h3{font-size:17px;color:#1a1a2e;margin-bottom:10px}
+.result-page .next-steps p{color:#555;line-height:1.8;font-size:14px}
+.result-page .next-steps .phone{font-weight:700;color:#667eea}
+.result-page .disclaimer{text-align:center;color:#999;font-size:12px;margin-top:20px}
+/* Footer */
+.site-footer{text-align:center;padding:16px;color:rgba(255,255,255,0.7);font-size:12px}
+</style>
+</head>
+<body>
+<div style="width:100%">
+<div class="container">
+<div class="card">
+<div class="card-header">
+<div class="flag">🇭🇰</div>
+<h1>香港移民计划匹配工具</h1>
+<p class="subtitle">回答几个简单问题，获取专属移民方案推荐</p>
+</div>
+<div class="card-body">
+<div class="progress-bar" id="progressBar">
+<div class="step active" data-step="0"></div>
+<div class="step" data-step="1"></div>
+<div class="step" data-step="2"></div>
+<div class="step" data-step="3"></div>
+<div class="step" data-step="4"></div>
+</div>
+<form id="immigrationForm" novalidate>
+<!-- Step 0: 基本信息 -->
+<div class="form-step active" data-step="0">
+<div class="form-group"><label>姓名 <span style="color:#e74c3c">*</span></label><input type="text" name="name" placeholder="请输入您的姓名" required></div>
+<div class="form-group"><label>性别 <span style="color:#e74c3c">*</span></label>
+<div class="chip-select-group" data-field="gender">
+<label class="chip"><input type="radio" name="gender" value="男" required> 男</label>
+<label class="chip"><input type="radio" name="gender" value="女"> 女</label>
+</div></div>
+<div class="form-group"><label>年龄 <span style="color:#e74c3c">*</span></label><input type="number" name="age" min="18" max="100" placeholder="请输入年龄" required></div>
+<div class="form-group"><label>联系电话 <span style="color:#e74c3c">*</span></label><input type="text" name="phone" placeholder="请输入手机号码" pattern="^1[3-9]\\d{9}$" required><div class="error-msg">请输入有效的手机号码（11位，以1开头）</div></div>
+<div class="form-group"><label>最高学历 <span style="color:#e74c3c">*</span></label>
+<select name="education" required><option value="">请选择</option><option value="中学">中学</option><option value="专科">专科</option><option value="本科">本科</option><option value="硕士">硕士</option><option value="博士">博士</option></select></div>
+<div class="form-group cond-edu" style="display:none"><label>本科院校名称</label><input type="text" name="undergradSchool" placeholder="请输入本科毕业院校"></div>
+<div class="form-group cond-edu" style="display:none"><label>科研论文数量</label><input type="number" name="researchPapers" min="0" placeholder="请输入科研论文数量"></div>
+<div class="form-group cond-edu" style="display:none"><label>发明专利数量</label><input type="number" name="patents" min="0" placeholder="请输入发明专利数量"></div>
+<div class="btn-row"><div></div><button type="button" class="btn btn-primary" onclick="nextStep(0)">下一步 →</button></div>
+</div>
+
+<!-- Step 1: 移民目的与家属 -->
+<div class="form-step" data-step="1">
+<div class="form-group"><label>移民目的 <span style="color:#e74c3c">*</span></label>
+<div class="checkbox-group" data-field="purpose">
+<label class="chip" data-value="规划子女教育"><input type="checkbox" value="规划子女教育"> 规划子女教育</label>
+<label class="chip" data-value="事业发展"><input type="checkbox" value="事业发展"> 事业发展</label>
+<label class="chip" data-value="资产配置"><input type="checkbox" value="资产配置"> 资产配置</label>
+<label class="chip" data-value="生活方式"><input type="checkbox" value="生活方式"> 生活方式</label>
+<label class="chip" data-value="其他"><input type="checkbox" value="其他"> 其他</label>
+</div><div class="error-msg">请至少选择一个移民目的</div></div>
+<div class="form-group"><label>是否携带家属 <span style="color:#e74c3c">*</span></label>
+<div class="chip-select-group" data-field="family">
+<label class="chip"><input type="radio" name="family" value="是" required onchange="toggleFamilyFields()"> 是</label>
+<label class="chip"><input type="radio" name="family" value="否" onchange="toggleFamilyFields()"> 否</label>
+</div></div>
+<div class="form-group cond-family" style="display:none"><label>随行家属类别</label>
+<div class="checkbox-group" data-field="familyMembers">
+<label class="chip" data-value="配偶"><input type="checkbox" value="配偶" onchange="toggleChildrenFields()"> 配偶</label>
+<label class="chip" data-value="父母"><input type="checkbox" value="父母" onchange="toggleChildrenFields()"> 父母</label>
+<label class="chip" data-value="未成年子女"><input type="checkbox" value="未成年子女" onchange="toggleChildrenFields()"> 未成年子女</label>
+</div></div>
+<div class="form-group cond-children" style="display:none"><label>未成年子女人数</label><input type="number" name="childrenCount" min="0" placeholder="请输入未成年子女人数"></div>
+<div class="form-group cond-children" style="display:none"><label>子女年龄</label><input type="text" name="childrenAges" placeholder="多个年龄请用逗号分隔"><div class="hint">多个年龄请用逗号分隔</div></div>
+<div class="btn-row"><button type="button" class="btn btn-secondary" onclick="prevStep(1)">← 上一步</button><button type="button" class="btn btn-primary" onclick="nextStep(1)">下一步 →</button></div>
+</div>
+
+<!-- Step 2: 财务与职业 -->
+<div class="form-step" data-step="2">
+<div class="form-group"><label>个人纳税年收入(万元/人民币) <span style="color:#e74c3c">*</span></label><input type="number" name="income" min="0" step="0.1" placeholder="请输入年收入（万元人民币）" required></div>
+<div class="form-group"><label>是否愿意投资3000万港元 <span style="color:#e74c3c">*</span></label>
+<div class="chip-select-group" data-field="invest">
+<label class="chip"><input type="radio" name="invest" value="是" required> 是</label>
+<label class="chip"><input type="radio" name="invest" value="否"> 否</label>
+</div></div>
+<div class="form-group"><label>工作经验年限 <span style="color:#e74c3c">*</span></label>
+<select name="workYears" required><option value="">请选择</option><option value="少于3年">少于3年</option><option value="3-5年">3-5年</option><option value="5-10年">5-10年</option><option value="10年以上">10年以上</option></select></div>
+<div class="form-group"><label>目前在职公司</label><input type="text" name="company" placeholder="请输入公司名称"></div>
+<div class="form-group"><label>工作岗位</label><input type="text" name="jobTitle" placeholder="请输入工作岗位"></div>
+<div class="btn-row"><button type="button" class="btn btn-secondary" onclick="prevStep(2)">← 上一步</button><button type="button" class="btn btn-primary" onclick="nextStep(2)">下一步 →</button></div>
+</div>
+
+<!-- Step 3: 香港业务 -->
+<div class="form-step" data-step="3">
+<div class="form-group"><label>香港是否有公司或业务 <span style="color:#e74c3c">*</span></label>
+<div class="chip-select-group" data-field="hkBiz">
+<label class="chip"><input type="radio" name="hkBiz" value="有" required onchange="toggleHkBizFields()"> 有</label>
+<label class="chip"><input type="radio" name="hkBiz" value="无" onchange="toggleHkBizFields()"> 无</label>
+</div></div>
+<div class="form-group cond-hkbiz" style="display:none"><label>香港公司年营收(万港币)</label><input type="number" name="hkRevenue" min="0" placeholder="请输入年营收（万港币）"></div>
+<div class="form-group cond-hkbiz" style="display:none"><label>本地员工数量</label><input type="number" name="hkEmployees" min="0" placeholder="请输入本地员工数量"></div>
+<div class="btn-row"><button type="button" class="btn btn-secondary" onclick="prevStep(3)">← 上一步</button><button type="button" class="btn btn-primary" onclick="nextStep(3)">下一步 →</button></div>
+</div>
+
+<!-- Step 4: 专业资格 -->
+<div class="form-step" data-step="4">
+<div class="form-group"><label>持有的专业资格证书</label>
+<div class="checkbox-group" data-field="certificates">
+<label class="chip" data-value="律师"><input type="checkbox" value="律师"> 律师</label>
+<label class="chip" data-value="会计师"><input type="checkbox" value="会计师"> 会计师</label>
+<label class="chip" data-value="医生"><input type="checkbox" value="医生"> 医生</label>
+<label class="chip" data-value="金融分析师"><input type="checkbox" value="金融分析师"> 金融分析师</label>
+<label class="chip" data-value="其他"><input type="checkbox" value="其他"> 其他</label>
+<label class="chip" data-value="无"><input type="checkbox" value="无"> 无</label>
+</div></div>
+<div class="btn-row"><button type="button" class="btn btn-secondary" onclick="prevStep(4)">← 上一步</button><button type="button" class="btn btn-primary" onclick="evaluateAndSubmit()">提交并查看结果</button></div>
+</div>
+</form>
+<div class="result-page" id="resultPage"></div>
+</div>
+</div>
+</div>
+<div class="site-footer">© 香港移民计划匹配工具 · 评估结果仅供参考</div>
+</div>
+
+<script>
+!(function() {
+'use strict';
+
+// ===== 芯片选择交互 =====
+document.querySelectorAll('.chip-select-group').forEach(function(group) {
+  group.querySelectorAll('.chip input').forEach(function(input) {
+    input.addEventListener('change', function() {
+      group.querySelectorAll('.chip').forEach(function(c) { c.classList.remove('selected'); });
+      if (this.checked) this.closest('.chip').classList.add('selected');
+    });
+  });
+});
+document.querySelectorAll('.checkbox-group').forEach(function(group) {
+  group.querySelectorAll('.chip input').forEach(function(input) {
+    input.addEventListener('change', function() {
+      this.closest('.chip').classList.toggle('selected', this.checked);
+    });
+  });
+});
+
+// ===== 条件显示逻辑 =====
+window.toggleFamilyFields = function() {
+  var fam = document.querySelector('input[name="family"]:checked');
+  var show = fam && fam.value === '是';
+  document.querySelectorAll('.cond-family').forEach(function(el) { el.style.display = show ? 'block' : 'none'; });
+  if (!show) {
+    document.querySelectorAll('.cond-family input[type="checkbox"]').forEach(function(cb) { cb.checked = false; });
+    document.querySelectorAll('.cond-family .chip').forEach(function(c) { c.classList.remove('selected'); });
+    toggleChildrenFields();
+  }
+};
+window.toggleChildrenFields = function() {
+  var childCb = document.querySelector('.cond-family input[value="未成年子女"]');
+  var show = childCb && childCb.checked;
+  document.querySelectorAll('.cond-children').forEach(function(el) { el.style.display = show ? 'block' : 'none'; });
+  if (!show) { document.querySelector('[name="childrenCount"]').value = ''; document.querySelector('[name="childrenAges"]').value = ''; }
+};
+window.toggleHkBizFields = function() {
+  var biz = document.querySelector('input[name="hkBiz"]:checked');
+  var show = biz && biz.value === '有';
+  document.querySelectorAll('.cond-hkbiz').forEach(function(el) { el.style.display = show ? 'block' : 'none'; });
+  if (!show) { document.querySelector('[name="hkRevenue"]').value = ''; document.querySelector('[name="hkEmployees"]').value = ''; }
+};
+document.querySelector('[name="education"]').addEventListener('change', function() {
+  var show = this.value === '硕士' || this.value === '博士';
+  document.querySelectorAll('.cond-edu').forEach(function(el) { el.style.display = show ? 'block' : 'none'; });
+  if (!show) {
+    document.querySelector('[name="undergradSchool"]').value = '';
+    document.querySelector('[name="researchPapers"]').value = '';
+    document.querySelector('[name="patents"]').value = '';
+  }
+});
+
+// ===== 表单收集 =====
+function getFormData() {
+  var getRadio = function(name) { var r = document.querySelector('input[name="' + name + '"]:checked'); return r ? r.value : ''; };
+  var getChecks = function(field) {
+    var group = document.querySelector('.checkbox-group[data-field="' + field + '"]');
+    if (!group) return [];
+    return Array.from(group.querySelectorAll('input:checked')).map(function(cb) { return cb.value; });
+  };
+  return {
+    name: document.querySelector('[name="name"]').value.trim(),
+    gender: getRadio('gender'),
+    age: parseInt(document.querySelector('[name="age"]').value) || 0,
+    phone: document.querySelector('[name="phone"]').value.trim(),
+    education: document.querySelector('[name="education"]').value,
+    undergradSchool: document.querySelector('[name="undergradSchool"]').value.trim(),
+    researchPapers: parseInt(document.querySelector('[name="researchPapers"]').value) || 0,
+    patents: parseInt(document.querySelector('[name="patents"]').value) || 0,
+    purpose: getChecks('purpose'),
+    family: getRadio('family'),
+    familyMembers: getChecks('familyMembers'),
+    childrenCount: parseInt(document.querySelector('[name="childrenCount"]').value) || 0,
+    childrenAges: document.querySelector('[name="childrenAges"]').value.trim(),
+    income: parseFloat(document.querySelector('[name="income"]').value) || 0,
+    invest: getRadio('invest'),
+    workYears: document.querySelector('[name="workYears"]').value,
+    company: document.querySelector('[name="company"]').value.trim(),
+    jobTitle: document.querySelector('[name="jobTitle"]').value.trim(),
+    hkBiz: getRadio('hkBiz'),
+    hkRevenue: parseInt(document.querySelector('[name="hkRevenue"]').value) || 0,
+    hkEmployees: parseInt(document.querySelector('[name="hkEmployees"]').value) || 0,
+    certificates: getChecks('certificates')
+  };
+}
+
+// ===== 步骤导航 =====
+function showStep(n) {
+  document.querySelectorAll('.form-step').forEach(function(s) { s.classList.remove('active'); });
+  var step = document.querySelector('.form-step[data-step="' + n + '"]');
+  if (step) step.classList.add('active');
+  document.querySelectorAll('#progressBar .step').forEach(function(dot, i) {
+    dot.className = 'step' + (i < n ? ' done' : '') + (i === n ? ' active' : '');
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function validateStep(n) {
+  if (n === 0) {
+    var name = document.querySelector('[name="name"]');
+    var age = document.querySelector('[name="age"]');
+    var phone = document.querySelector('[name="phone"]');
+    var edu = document.querySelector('[name="education"]');
+    var gender = document.querySelector('input[name="gender"]:checked');
+    if (!name.value.trim()) { name.focus(); alert('请输入姓名'); return false; }
+    if (!gender) { alert('请选择性别'); return false; }
+    if (!age.value || age.value < 18 || age.value > 100) { age.focus(); alert('请输入有效年龄(18-100)'); return false; }
+    if (!/^1[3-9]\d{9}$/.test(phone.value.trim())) { phone.focus(); alert('请输入有效的手机号码'); return false; }
+    if (!edu.value) { alert('请选择最高学历'); return false; }
+  }
+  if (n === 1) {
+    if (!document.querySelector('[data-field="purpose"] input:checked')) { alert('请至少选择一个移民目的'); return false; }
+    if (!document.querySelector('input[name="family"]:checked')) { alert('请选择是否携带家属'); return false; }
+  }
+  if (n === 2) {
+    if (!document.querySelector('[name="income"]').value) { alert('请输入个人纳税年收入'); return false; }
+    if (!document.querySelector('input[name="invest"]:checked')) { alert('请选择是否愿意投资3000万港元'); return false; }
+    if (!document.querySelector('[name="workYears"]').value) { alert('请选择工作经验年限'); return false; }
+  }
+  if (n === 3) {
+    if (!document.querySelector('input[name="hkBiz"]:checked')) { alert('请选择香港是否有公司或业务'); return false; }
+  }
+  return true;
+}
+
+window.nextStep = function(current) {
+  if (!validateStep(current)) return;
+  showStep(current + 1);
+};
+window.prevStep = function(current) { showStep(current - 1); };
+
+// ===== AI 评估引擎 =====
+function evaluatePlan(data) {
+  var plans = [];
+  var incomeHKD = data.income * 1.1;
+
+  if (data.invest === '是') {
+    plans.push({
+      plan: '香港新资本投资者入境计划',
+      reason: '根据您的情况，您符合香港投资移民的基本资金门槛。该计划要求申请人投资不少于3000万港元于获许金融资产。'
+    });
+  }
+  if (incomeHKD > 250) {
+    plans.push({
+      plan: '高端人才通行证计划 (A类)',
+      reason: '恭喜！您在申请前一年，全年收入达港币250万元或以上，符合高才通A类的申请资格。此计划旨在吸引高收入人才。'
+    });
+  }
+  if (data.education === '本科') {
+    if (data.workYears !== '少于3年') {
+      plans.push({
+        plan: '高端人才通行证计划 (B类)',
+        reason: '您拥有本科学位及一定工作经验，符合高才通B类的申请资格。若您毕业于全球百强大学，获批率更高。'
+      });
+    } else {
+      plans.push({
+        plan: '高端人才通行证计划 (C类)',
+        reason: '您拥有本科学位但工作经验不足三年，符合高才通C类的申请资格。请注意该类每年有配额限制。'
+      });
+    }
+  }
+  if (data.education === '硕士' || data.education === '博士') {
+    plans.push({
+      plan: '优秀人才入境计划',
+      reason: '您具备硕士或以上学历，这是优才计划的核心优势之一。我们建议您进一步进行综合计分制评估，您的年龄、工作经验和语言能力都可能为您加分。'
+    });
+  }
+  var hasHkBzOrWork = data.hkBiz === '有' || (data.company && data.company.length > 0);
+  if ((data.education === '专科' || data.education === '本科') && hasHkBzOrWork) {
+    plans.push({
+      plan: '输入内地人才计划 (专才)',
+      reason: '您具备专科或以上学历，并有香港公司雇佣或自身在港经营业务，这符合专才计划"雇主担保"的核心要求。'
+    });
+  }
+  // 留学进修始终作为兜底
+  plans.push({
+    plan: '非本地毕业生留港/回港就业安排 (留学进修)',
+    reason: '作为备选方案，您也可以考虑通过赴港就读全日制课程，毕业后可申请IANG签证留港工作，满7年可申请永居。'
+  });
+  return plans;
+}
+
+// ===== 结果渲染 =====
+function showResult(data, plans) {
+  document.getElementById('immigrationForm').style.display = 'none';
+  document.getElementById('progressBar').style.display = 'none';
+  var rp = document.getElementById('resultPage');
+  var planCount = plans.length;
+  var isSingle = planCount === 1;
+  var titleText = isSingle
+    ? '最适合您的移民计划是'
+    : '以下 ' + planCount + ' 项移民计划可能适合您';
+  var cards = '';
+  for (var i = 0; i < plans.length; i++) {
+    var tag = '';
+    if (i === 0 && !isSingle) tag = '<span class="tag">最佳推荐</span><br>';
+    else if (i === plans.length - 1 && !isSingle && plans.length > 2) tag = '<span class="tag">备选方案</span><br>';
+    cards += '<div class="plan-card">' + tag + '<div class="plan-name">' + plans[i].plan + '</div><p class="reason">' + plans[i].reason + '</p></div>';
+  }
+  rp.innerHTML = '<h2>尊敬的 ' + data.name + ' 先生/女士，您好！</h2>' +
+    '<p class="thank">感谢您参与我们的移民资格预审。</p><hr>' +
+    '<h3 style="margin:16px 0 12px;text-align:center">📋 评估结果</h3>' +
+    '<p style="text-align:center;color:#666;margin-bottom:16px">' + titleText + '</p>' +
+    cards + '<hr>' +
+    '<div class="next-steps"><h3>💡 下一步行动</h3>' +
+    '<p>我们的资深移民顾问将在 <strong>2个工作日内</strong> 通过您预留的电话 <span class="phone">' + data.phone + '</span> 与您取得联系。</p>' +
+    '<p>届时，顾问将为您提供更详尽的方案解读、材料清单及个性化的时间规划。</p>' +
+    '<p style="color:#888">请您保持电话畅通，或留意我们的来电。</p></div>' +
+    '<p class="disclaimer">本评估结果仅供参考，最终资格以香港入境事务处官方审核为准。</p>' +
+    '<button class="btn-restart" onclick="restartForm()">🔄 重新评估</button>';
+  rp.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ===== 重新评估 =====
+window.restartForm = function() {
+  document.getElementById('immigrationForm').reset();
+  document.getElementById('immigrationForm').style.display = '';
+  document.getElementById('progressBar').style.display = 'flex';
+  document.getElementById('resultPage').classList.remove('active');
+  document.getElementById('resultPage').innerHTML = '';
+  document.querySelectorAll('.chip').forEach(function(c) { c.classList.remove('selected'); });
+  document.querySelectorAll('.cond-edu, .cond-family, .cond-children, .cond-hkbiz').forEach(function(el) { el.style.display = 'none'; });
+  showStep(0);
+};
+
+// ===== 提交处理 =====
+window.evaluateAndSubmit = function() {
+  if (!validateStep(4)) return;
+  var data = getFormData();
+  var plans = evaluatePlan(data);
+  showResult(data, plans);
+
+  // 构建记录
+  var planNames = plans.map(function(p) { return p.plan; }).join(' | ');
+  var planReasons = plans.map(function(p) { return p.reason; }).join(' | ');
+  var record = {
+    _id: Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
+    name: data.name,
+    gender: data.gender,
+    age: data.age,
+    phone: data.phone,
+    education: data.education,
+    undergradSchool: data.undergradSchool,
+    researchPapers: data.researchPapers,
+    patents: data.patents,
+    purpose: data.purpose.join(', '),
+    family: data.family,
+    familyMembers: data.familyMembers.length ? data.familyMembers.join(', ') : '',
+    childrenCount: data.childrenCount,
+    childrenAges: data.childrenAges,
+    income: data.income,
+    invest: data.invest,
+    workYears: data.workYears,
+    company: data.company,
+    jobTitle: data.jobTitle,
+    hkBiz: data.hkBiz,
+    hkRevenue: data.hkRevenue,
+    hkEmployees: data.hkEmployees,
+    certificates: data.certificates.length ? data.certificates.join(', ') : '无',
+    '推荐计划': planNames,
+    '推荐理由': planReasons,
+    '提交时间': new Date().toLocaleString('zh-CN')
+  };
+
+  // 保存到 localStorage（离线备用）
+  try {
+    var existing = JSON.parse(localStorage.getItem('hk_immigration_submissions') || '[]');
+    existing.push(record);
+    localStorage.setItem('hk_immigration_submissions', JSON.stringify(existing));
+  } catch(e) {}
+
+  // 提交到公网后端（线上环境）
+  var backendUrl = localStorage.getItem('hk_backend_url') || '';
+  if (!backendUrl && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+    // 尝试从 URL 参数获取后端地址
+    var params = new URLSearchParams(window.location.search);
+    backendUrl = params.get('api') || '';
+  }
+  if (backendUrl) {
+    fetch(backendUrl + '/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(record)
+    }).then(function(r) { return r.json(); }).then(function(res) {
+      console.log('云端提交成功:', res);
+    }).catch(function(err) {
+      console.log('云端提交失败，已保存到本地:', err);
+    });
+  } else {
+    // 本地环境提交到同域后端
+    fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(record)
+    }).then(function(r) { return r.json(); }).then(function(res) {
+      console.log('本地提交成功:', res);
+    }).catch(function(err) {
+      console.log('本地提交失败:', err);
+    });
+  }
+};
+
+})();
+</script>
+</body>
+</html>

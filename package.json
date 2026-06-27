@@ -1,0 +1,16 @@
+{
+  "name": "hk-immigration-api",
+  "version": "1.0.0",
+  "description": "香港移民计划匹配工具 - 后端API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
