@@ -1,1 +1,31 @@
-[]
+[
+  {
+    "_id": "mqxqmq3pyrp8r3",
+    "name": "测试验证",
+    "gender": "男",
+    "age": 40,
+    "phone": "13900139000",
+    "education": "本科",
+    "undergradSchool": "",
+    "researchPapers": 0,
+    "patents": 0,
+    "purpose": "规划子女教育",
+    "family": "否",
+    "familyMembers": "",
+    "childrenCount": 0,
+    "childrenAges": "",
+    "income": 300,
+    "invest": "否",
+    "workYears": "10年以上",
+    "company": "测试公司",
+    "jobTitle": "总监",
+    "hkBusiness": "无",
+    "hkRevenue": 0,
+    "hkEmployees": 0,
+    "certificates": "无",
+    "推荐计划": "高端人才通行证计划 (A类) | 非本地毕业生留港/回港就业安排 (留学进修)",
+    "推荐理由": "恭喜！您在申请前一年，全年收入达港币250万元或以上，符合高才通A类的申请资格 | 作为备选方案，您也可以考虑通过赴港就读全日制课程",
+    "提交时间": "2026/6/28 20:00:00",
+    "_submittedAt": "2026-06-28T12:01:04.933Z"
+  }
+]
