@@ -458,24 +458,49 @@ window.evaluateAndSubmit = function() {
   } catch(e) {}
 
   // 提交到公网后端（线上环境）
+  var DEFAULT_API = 'https://hk-immigration-tool.onrender.com';
   var backendUrl = localStorage.getItem('hk_backend_url') || '';
   if (!backendUrl && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-    // 尝试从 URL 参数获取后端地址
     var params = new URLSearchParams(window.location.search);
-    backendUrl = params.get('api') || '';
+    backendUrl = params.get('api') || DEFAULT_API;
   }
+
+  // 显示提交状态
+  function showSubmitStatus(msg, isError) {
+    var el = document.getElementById('submitStatus');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'submitStatus';
+      el.style.cssText = 'margin:12px 0;padding:10px 14px;border-radius:8px;font-size:13px;text-align:center';
+      var nextDiv = rp.querySelector('.next-steps');
+      if (nextDiv) rp.insertBefore(el, nextDiv);
+    }
+    el.style.background = isError ? '#fff0f0' : '#f0fff0';
+    el.style.color = isError ? '#c00' : '#060';
+    el.innerHTML = (isError ? '⚠️ ' : '✅ ') + msg;
+    el.style.display = 'block';
+  }
+
   if (backendUrl) {
     fetch(backendUrl + '/api/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(record)
-    }).then(function(r) { return r.json(); }).then(function(res) {
-      console.log('云端提交成功:', res);
+    }).then(function(r) {
+      if (!r.ok) throw new Error('服务器错误 ' + r.status);
+      return r.json();
+    }).then(function(res) {
+      if (res.success) {
+        console.log('云端提交成功:', res);
+        showSubmitStatus('评估结果已成功提交，顾问将尽快联系您！');
+      } else {
+        showSubmitStatus('提交失败：' + (res.error || '未知错误'), true);
+      }
     }).catch(function(err) {
-      console.log('云端提交失败，已保存到本地:', err);
+      console.log('云端提交失败:', err);
+      showSubmitStatus('网络提交失败，数据已保存在本地浏览器中。请联系客服手动同步。', true);
     });
   } else {
-    // 本地环境提交到同域后端
     fetch('/api/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
