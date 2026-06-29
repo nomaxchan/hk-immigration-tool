@@ -150,5 +150,33 @@
     "test": true,
     "_id": "mqyuv7uztbatxb",
     "_submittedAt": "2026-06-29T06:47:25.835Z"
+  },
+  {
+    "name": "自动化测试",
+    "gender": "男",
+    "age": 30,
+    "phone": "13800001111",
+    "education": "本科",
+    "researchPapers": 0,
+    "patents": 0,
+    "purpose": "事业发展",
+    "family": "否",
+    "familyMembers": "",
+    "childrenCount": 0,
+    "childrenAges": "",
+    "income": 80,
+    "invest": "否",
+    "workYears": "5-10年",
+    "company": "测试公司",
+    "jobTitle": "经理",
+    "hkBiz": "无",
+    "hkRevenue": 0,
+    "hkEmployees": 0,
+    "certificates": "无",
+    "推荐计划": "优秀人才入境计划",
+    "推荐理由": "测试自动提交",
+    "提交时间": "2026/6/29 16:05:00",
+    "_id": "mqyxns1xmp1ebu",
+    "_submittedAt": "2026-06-29T08:05:37.605Z"
   }
 ]
